@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gerador Devaneio do vellhaco </title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+
+  </head>
+
+  <body>
+   
+    <div class="container">
+      <div id="caixa-do-canvas">
+        
+      </div>
+
+      <div class="caixa esquerda">
+        <button id="botao-limpar">Limpar tela</button>
+        <button id="botao-desenhar-textura">criar textura</button>
+        <button id="botao-salvar-textura">salvar textura</button>
+        <h3>Controles da textura</h3>
+        <p>Número máximo de partes da linha</p>
+        <input type="range" id="controle-numero-maximo-de-partes" min="1" max="15" value="7">
+        <p>Número mínimo de partes da linha</p>
+        <input type="range" id="controle-numero-minimo-de-partes" min="1" max="15" value="5">
+        <p>Números de linhas</p>
+        <input type="range" id="controle-numero-de-linhas" min="1" max="15" value="5">
+        <p>Aleatoriedade da linha</p>
+        <input type="range" id="controle-aleatoriedade-da-linha" min="1" max="200" value="20">
+        <p>Chance de bifurcação</p>
+        <input type="range" id="controle-chance-bifurcacao" min="1" max="10" value="2">
+        <p>Força de atenuação das linhas</p>
+        <input type="range" id="controle-atenuador-de-linha" min="0" max="50" value="10">
+      </div>
+      
+      <div class="caixa direita">
+        <h3>Texto para distorcer</h3>
+        <input type="text" id="texto-para-distorcer" value="Escreva o que quiser distorcer">
+        <h3>Controles do deslocamento</h3>
+        <p>Força Deslocamento eixo x</p>
+        <input type="range" id="controle-deslocamento-x" min="-200" max="200" value="30">
+        <p>Força Deslocamento eixo y</p>
+        <input type="range" id="controle-deslocamento-y" min="-200" max="200" value="30">
+        <p></p>
+        <button id="botao-gerar-deslocamento">Gerar Deslocamento</button>
+        
+        
+      </div>
+    </div>
+    <script src="principal.js"></script>
+    <script src="desenhoLinha.js"></script>
+    <script src="deslocamento.js"></script>
+  </body>
+</html>
