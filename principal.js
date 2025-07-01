@@ -9,170 +9,341 @@
 //e as ultimas serão mais finas, sem alterar a questão da cor da linha
 //blur proporcional à oitava atual
 
-//TODO fazer controles no site para controlar as variaveis
+//TODO criar sistema de pincel
+//- colocar textura perlin normal -
 
-//TODO bifurcação tem que seguir levemente o vetor inicial
-//provavelmente copiar o vetor do [ponto,ponto+1]
-//e girar levemente sobre o ponto com um theta aleatorio
+//TODO OS pesos e valores tem que ser proporcionais a escala da tela
+//provavelmente fazer uma variavel que escala 
+//os valores que influenciem no desenho dos pixeis
+//controlar o tamanho do texto pelo tamanho da tela
+
+//Estudar o p5 graphics
+
+//! objetivos realistas
+
+//*adicionar controle grossura da linha
+//*adicionar adicionar blur
+//*dicionar adicionar textos nas areas estranhas
+//*controlar cor do fundo e do texto
+//!controlar a distorçao para sair do centro
+//adicionar exportar como png ou jpeg
+//adicionar logo em svg do devaneio do velhaco
 
 //buffers graficos
-let imgFinal; let imgParaDistorcer; let imgTextura;
+let imgTexto; let imgBufferDesfocado;
+let imgTextura; let imgAplicacao;
 
 //forcas para deslocar
-let forcaDeslocamentoX = 30; let forcaDeslocamentoY = 30; 
+let forcaDeslocamento = 30; 
 let direcaoX = 1 ; let direcaoY = 1;  
 
 //variaveis das linhas
 let numeroMaximoDePartes = 7; let numeroMinimoDePartes = 5;
-let numeroDeLinhas = 5; let aleatoriedadeDaLinha = 20;
+let numeroDeLinhas = 5; let aleatoriedadeDeLinha = 20;
 let chanceBifurcacao = 2; let atenuadorDeLinha = 10;
+let espessuraDeLinha = 10;
 
+let nivelDeDesfoque = 5;
+
+//variaveis de texto
+let TamanhoTextoPrincipal;
+let textoPrincipal = "Devaneio do Velhaco";
+let textoSuperior = "Devaneio";
+let textoDireito = "Devaneio";
+let textoInferior = "Devaneio";
+let textoEsquerdo = "Devaneio";
 
 //outras variaveis
-let TextoParaDistorcer = "devaneio do velhaco devaneio do velhaco devaneio do velhaco\ndevaneio do velhaco\ndevaneio do velhaco\ndevaneio do velhaco\ndevaneio do velhaco\ndevaneio do velhaco";
-let tamanhoDaTela = [600,600];
+let corTexto;
+let corFundo;
+let tamanhoDaTela = [1080,1350];
+
+//essa é onde vai ser mirado as linhas da textura
 let pontoCentral;
+
+//aqui uma varivel para controlar o tamanho dos elementos
+let escalaDaTela;
 
 //========================================================//
 //-----------------Seção botões---------------------------//
 //=============definicoes de variaveis====================//
 //========================================================//
-let botaoTextoParaDistorcer;
-let botaoForcaDeslocamentoX; let botaoForcaDeslocamentoY;
+let botaoTamanhoTextoPrincipal;
+let botaoTextoPrincipal; let botaoTextoSuperior;
+let botaoTextoDireito;let botaoTextoInferior; let botaoTextoEsquerdo;
+let botaoCorTexto; let botaoCorFundo;
+
+let botaoForcaDeslocamento;
 let botaoGerarDeslocamento;
 
-let botaoCorDoFundo; let botaoCriarTextura
+let botaoCriarTextura;
 let botaoNumeroMaximoDePartes; let botaoNumeroMinimoDePartes;
-let botaoNumeroDeLinhas; let botaoAleatoriedadeDaLinha;
+let botaoNumeroDeLinhas; let botaoAleatoriedadeDeLinha;
 let botaoChanceBifurcacao; let botaoAtenuadorDeLinha;
-let botaoSalvarTextura;
+let botaoEspessuraDeLinha;
+let botaoDesfoque;
 
+let botaoTelaTextura; let botaoTelaTexto;
+let botaoTelaAplicação
+
+
+
+function preload() {
+  font = loadFont("assets/Butler_Bold.otf")
+}
 
 function setup() {
-  let canvas = createCanvas(tamanhoDaTela[0], tamanhoDaTela[1]);
-  canvas.parent("caixa-do-canvas");//coloco como pai a div caixa do canvas
   
-  pontoCentral = [width/2,height/2];
+  /*
+  ――――――――――――――――――――――――――――――――――――――――――――――――――――
+  ‖‖‖  ‖‖‖  ‖‖ seção configuração básica ‖‖  ‖‖‖   ‖‖‖
+  ――――――――――――――――――――――――――――――――――――――――――――――――――――
+  */
+  let canvas = createCanvas(tamanhoDaTela[0], tamanhoDaTela[1]);
+  canvas.parent("canvas-wrapper");//coloco como pai a div caixa do canvas
+  noLoop();
   //!pixel density = 1 pra facilitar
   pixelDensity(1);
-  noLoop();
+  textFont(font);
+  mostrarCaixa("textura");
+  
+  /*
+  ｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣
+  ｢｣     seção criação de imagens     ｢｣
+  ｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣
+  */  
+  
+  //são as 3 imagens
+  imgAplicacao = createImage(width,height);
+  imgTexto = createImage(width,height);
+  imgTextura = createGraphics(width,height); //textura inicial
+  imgBufferDesfocado = createGraphics(width,height); //textura desfocada
 
-  imgFinal = createImage(width,height);
-  imgParaDistorcer = createImage(width,height);
-  imgTextura = createImage(width,height);
 
+  escalaDaTela = (sqrt(width * height))/1000;
+  pontoCentral = [width/2,height/2];
 
   //========================================================//
   //-----------------Seção botões---------------------------//
   //========================================================//
-  
-  botaoCorDoFundo = select("#botao-limpar");
+
   botaoCriarTextura = select("#botao-desenhar-textura");
-  botaoSalvarTextura = select("#botao-salvar-textura");
   
   botaoNumeroMaximoDePartes = select("#controle-numero-maximo-de-partes"); 
   botaoNumeroMinimoDePartes = select("#controle-numero-minimo-de-partes");
   botaoNumeroDeLinhas = select("#controle-numero-de-linhas");  
-  botaoAleatoriedadeDaLinha = select("#controle-aleatoriedade-da-linha");
+  botaoAleatoriedadeDeLinha = select("#controle-aleatoriedade-da-linha");
   botaoChanceBifurcacao = select("#controle-chance-bifurcacao"); 
   botaoAtenuadorDeLinha = select("#controle-atenuador-de-linha");
+  botaoEspessuraDeLinha = select("#controle-espessura-de-linha");
 
-  botaoTextoParaDistorcer = select("#texto-para-distorcer");
-  botaoForcaDeslocamentoX = select("#controle-deslocamento-x");
-  botaoForcaDeslocamentoY = select("#controle-deslocamento-y");
+  botaoTamanhoTextoPrincipal = select("#controle-tamanho-texto-principal");
+  botaoTextoPrincipal = select("#texto-principal");
+  botaoTextoSuperior = select("#texto-superior");
+  botaoTextoDireito = select("#texto-direito");
+  botaoTextoInferior = select("#texto-inferior");
+  botaoTextoEsquerdo = select("#texto-esquerdo");
+
+  botaoCorFundo = select("#cor-fundo");
+  botaoCorTexto = select("#cor-texto");
+
+  botaoForcaDeslocamento = select("#controle-range-deslocamento");
   botaoGerarDeslocamento = select("#botao-gerar-deslocamento");
+  
+  botaoDesfoque =  select("#controle-desfoque-de-linha");
+  
+  select("#botao-tela-textura").mousePressed(() => {
+    mostrarCaixa("textura");
+    image(imgBufferDesfocado,0,0);
+  });
+  select("#botao-tela-texto").mousePressed(() => {
+    mostrarCaixa("texto");
+    escreverTexto();
+  });
+  select("#botao-tela-aplicacao").mousePressed(() => mostrarCaixa("aplicacao"));
 }
 
 function draw() {
+  
+  //aqui para iniciar com o valores que já estão nos sliders
+  nivelDeDesfoque = botaoDesfoque.value(); espessuraDeLinha = botaoEspessuraDeLinha.value();
+  numeroMaximoDePartes = botaoNumeroMaximoDePartes.value();  numeroMinimoDePartes = botaoNumeroMinimoDePartes.value();
+  numeroDeLinhas = botaoNumeroDeLinhas.value();  aleatoriedadeDeLinha = botaoAleatoriedadeDeLinha.value();
+  chanceBifurcacao = botaoChanceBifurcacao.value();  atenuadorDeLinha = botaoAtenuadorDeLinha.value();
+  TamanhoTextoPrincipal = botaoTamanhoTextoPrincipal.value(); 
 
-  botaoCorDoFundo.mousePressed(() => background(255));
+  corTexto = botaoCorTexto.value(); corFundo = botaoCorFundo.value();
+
+  textoPrincipal = botaoTextoPrincipal.value();  
+  textoSuperior = botaoTextoSuperior.value(); 
+  textoDireito = botaoTextoDireito.value(); 
+  textoInferior = botaoTextoInferior.value(); 
+  textoEsquerdo = botaoTextoEsquerdo.value(); 
+
+  //tem que usar uma arrow function porque a função mousePressed espera um callback (chamar uma função)
   botaoCriarTextura.mousePressed(criadorDeTextura);
-  botaoSalvarTextura.mousePressed(salvarTextura);
+
   botaoGerarDeslocamento.mousePressed(distorcaoDoCanvas);
 
   botaoNumeroMaximoDePartes.changed(() => numeroMaximoDePartes = botaoNumeroMaximoDePartes.value());
   botaoNumeroMinimoDePartes.changed(() => numeroMinimoDePartes = botaoNumeroMinimoDePartes.value());
   botaoNumeroDeLinhas.changed(() => numeroDeLinhas = botaoNumeroDeLinhas.value());
-  botaoAleatoriedadeDaLinha.changed(() => aleatoriedadeDaLinha = botaoAleatoriedadeDaLinha.value());
+  botaoAleatoriedadeDeLinha.changed(() => aleatoriedadeDeLinha = botaoAleatoriedadeDeLinha.value());
   botaoChanceBifurcacao.changed(() => chanceBifurcacao = botaoChanceBifurcacao.value());
   botaoAtenuadorDeLinha.changed(() => atenuadorDeLinha = botaoAtenuadorDeLinha.value());
-  
-  botaoForcaDeslocamentoX.changed(() => forcaDeslocamentoX = botaoForcaDeslocamentoX.value());
-  botaoForcaDeslocamentoY.changed(() => forcaDeslocamentoY = botaoForcaDeslocamentoY.value());
-  botaoTextoParaDistorcer.input(() => {
-    TextoParaDistorcer = botaoTextoParaDistorcer.value()
+ 
+  botaoCorFundo.changed(()=> {
+    corFundo = botaoCorFundo.value();
     escreverTexto();
   });
-   
-  background(255);
+  botaoCorTexto.changed(()=> {
+    corTexto = botaoCorTexto.value();
+    escreverTexto();
+  });
   
-}
+  botaoTamanhoTextoPrincipal.changed(()=> {
+    TamanhoTextoPrincipal = botaoTamanhoTextoPrincipal.value();
+    escreverTexto();
+  });
 
-function escreverTexto(){
+  botaoEspessuraDeLinha.changed(() => espessuraDeLinha = botaoEspessuraDeLinha.value());
+
+  botaoDesfoque.input(() => {
+    nivelDeDesfoque = botaoDesfoque.value();
+    aplicarDesfoque();
+  });
+  
+  botaoForcaDeslocamento.changed(() => forcaDeslocamento = botaoForcaDeslocamento.value());
+
+  botaoTextoPrincipal.input(() => {
+    //texto para distorcer é uma variavel global
+    textoPrincipal = botaoTextoPrincipal.value();
+    escreverTexto();
+  });
+
+  botaoTextoSuperior.input(() => {
+    //texto para distorcer é uma variavel global
+    textoSuperior = botaoTextoSuperior.value();
+    escreverTexto();
+  });
+
+  botaoTextoDireito.input(() => {
+    //texto para distorcer é uma variavel global
+    textoDireito = botaoTextoDireito.value();
+    escreverTexto();
+  });
+
+  botaoTextoInferior.input(() => {
+    //texto para distorcer é uma variavel global
+    textoInferior = botaoTextoInferior.value();
+    escreverTexto();
+  });
+
+  botaoTextoEsquerdo.input(() => {
+    //texto para distorcer é uma variavel global
+    textoEsquerdo = botaoTextoEsquerdo.value();
+    escreverTexto();
+  });
+
+  //!olhando em retrospecto não precisava ter variaveis nomeadas para segurar os botões !ou talvez sim
   background(255);
-  textAlign(CENTER,TOP);
-  strokeWeight(0.1);
-  textSize(50)
-  text(TextoParaDistorcer, 60, 60, width*0.8);
+  criadorDeTextura();
 }
 
-function salvarTextura(){
-
-  loadPixels();
-  imgTextura.loadPixels();
-
-  for (let p = 0; p < pixels.length; p++) {
-    imgTextura.pixels[p] = pixels[p];    
+//função que alterna as caixas laterais, textura, textos e aplicação (tta)
+function mostrarCaixa(caixaAtiva) {
+  let paineis = selectAll(".caixa");
+  for (let p of paineis) {
+    p.hide();
   }
 
-  updatePixels();
-  imgTextura.updatePixels();
-  escreverTexto();
+  select("#"+caixaAtiva).show();
 }
 
+//escreve o texto 
+function escreverTexto(){
+  background(corFundo);
+  fill(corTexto);
+  noStroke();
+  textAlign(CENTER,TOP);
+  textSize(TamanhoTextoPrincipal);
+  textStyle(BOLD);
+  text(textoPrincipal, 80, 320, width-160);
+
+  let tamanhoTextoMoldura =40
+  textStyle(NORMAL);
+  textAlign(CENTER,TOP);
+  
+  push();
+  rotate(HALF_PI);
+  textSize(50);
+  text(textoDireito, tamanhoTextoMoldura+30, -width+tamanhoTextoMoldura/4 +20, height-tamanhoTextoMoldura/2 -50,tamanhoTextoMoldura);
+  rotate(-PI);
+  text(textoEsquerdo, -height+tamanhoTextoMoldura +10, tamanhoTextoMoldura/4+20, height -tamanhoTextoMoldura/2 -50,tamanhoTextoMoldura);
+  rotate(HALF_PI);
+  text(textoSuperior, tamanhoTextoMoldura+30, tamanhoTextoMoldura/4 +20, width-tamanhoTextoMoldura -50,tamanhoTextoMoldura);
+  pop();
+  //não sei pq mas tinha que fazer um push pop para o lado inferior
+  push();
+  textSize(50);
+  rotate(PI); // Rotate 180 degrees (PI radians)
+  text(textoInferior , -width+70, -height + tamanhoTextoMoldura -20, width-tamanhoTextoMoldura -30,tamanhoTextoMoldura);
+  pop();
+
+  loadPixels();
+  imgTexto.loadPixels();
+  for (let p = 0; p < pixels.length; p ++ ) {
+    imgTexto.pixels[p] = pixels[p]; 
+  } 
+  imgTexto.updatePixels();
+  updatePixels();
+}
+
+function aplicarDesfoque() {
+  imgBufferDesfocado.image(imgTextura, 0, 0);
+  //background(255)
+  imgBufferDesfocado.filter(BLUR, nivelDeDesfoque);
+  
+  image(imgBufferDesfocado,0,0);
+}
 
 function distorcaoDoCanvas() {
  
-    loadPixels();
-    imgParaDistorcer.loadPixels();
-    for (let p = 0; p < pixels.length; p +=4 ) {
-      imgParaDistorcer.pixels[p] = pixels[p];       // Red
-        imgParaDistorcer.pixels[p + 1] = pixels[p + 1]; // Green
-        imgParaDistorcer.pixels[p + 2] = pixels[p + 2]; // Blue
-        imgParaDistorcer.pixels[p + 3] = pixels[p + 3]; // Alpha    
-    } 
-
-    imgParaDistorcer.updatePixels();
-    updatePixels();
+   
     
     deslocamento(tamanhoDaTela);
-    tint(255,255)
-    image(imgTextura,0,0);
-    tint(255,100)
-    image(imgFinal,0,0);
+    tint(255,255);
+    //image(imgTextura,0,0);
+    tint(255,255);
+    image(imgAplicacao,0,0);
 }
 
 function criadorDeTextura(){
   //! isso tudo provavelmente tem que ser automatizado de alguma forma
-  background(255);
+  //Que aqui eu não uso tipo duas linahs no mesmo lugar, sera que posso reiniciar a seed no mesmo lugar?
+  //simgTextura.clear();
+  imgBufferDesfocado.background(255);
+  imgTextura.background(255);
 
   for (let p = 0; p < numeroDeLinhas; p++) {
     numeroDePartes = floor(random(numeroMinimoDePartes,numeroMaximoDePartes));
-    desenhoLinha(pontoAleatorioBorda(),pontoCentral,numeroDePartes,random(30,90));
+    desenhoLinha(imgTextura, pontoAleatorioBorda(),pontoCentral,numeroDePartes,random(30,90));
   }
-  filter(BLUR, 20);
-
+  imgTextura.filter(BLUR, nivelDeDesfoque/2)
+  
+  //puxar o blur para ser chamado quando alterado o valor do botão
   for (let p = 0; p < numeroDeLinhas; p++) {
     numeroDePartes = floor(random(numeroMinimoDePartes,numeroMaximoDePartes));
-    desenhoLinha(pontoAleatorioBorda(),pontoCentral,numeroDePartes,random(20,90));
+    desenhoLinha(imgTextura,pontoAleatorioBorda(),pontoCentral,numeroDePartes,random(20,90));
   }
-  filter(BLUR, 13);
-
+  
+  aplicarDesfoque();
 } 
 
 function pontoAleatorioBorda() {
+  //seleciono um caso que escolhe um dos lados da tela e um ponto aleatorio 
+  // retorna um array
   let caso = floor(random(4));
-
   switch(caso){
     case 0: return([random(width),0]);
     case 1: return([width,random(height)]);
@@ -180,3 +351,4 @@ function pontoAleatorioBorda() {
     case 3: return([0,random(height)]);
   }
 }
+ 

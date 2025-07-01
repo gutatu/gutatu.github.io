@@ -8,53 +8,170 @@
 
     <link rel="stylesheet" type="text/css" href="style.css">
 
-    <script src="p5.min.js"></script>
-    <script src="p5.sound.min.js"></script>
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
 
   </head>
 
   <body>
-   
+    <div class="cabecalho">
+      <img src="SVG/logo-gerador.svg" id="logo-gerador" height="30">
+      <button id="botao-tela-textura" class="itens-cabecalho">Textura</button>
+      <button id="botao-tela-texto" class="itens-cabecalho">Texto</button>
+      <button id="botao-tela-aplicacao"class="itens-cabecalho" >Aplicação</button>
+      <img src="SVG/logo-devaneio-do-velhaco-horizontal-1.svg" height="40">
+    </div>
     <div class="container">
       <div id="caixa-do-canvas">
-        
-      </div>
-
-      <div class="caixa esquerda">
-        <button id="botao-limpar">Limpar tela</button>
-        <button id="botao-desenhar-textura">criar textura</button>
-        <button id="botao-salvar-textura">salvar textura</button>
-        <h3>Controles da textura</h3>
-        <p>Número máximo de partes da linha</p>
-        <input type="range" id="controle-numero-maximo-de-partes" min="1" max="15" value="7">
-        <p>Número mínimo de partes da linha</p>
-        <input type="range" id="controle-numero-minimo-de-partes" min="1" max="15" value="5">
-        <p>Números de linhas</p>
-        <input type="range" id="controle-numero-de-linhas" min="1" max="15" value="5">
-        <p>Aleatoriedade da linha</p>
-        <input type="range" id="controle-aleatoriedade-da-linha" min="1" max="200" value="20">
-        <p>Chance de bifurcação</p>
-        <input type="range" id="controle-chance-bifurcacao" min="1" max="10" value="2">
-        <p>Força de atenuação das linhas</p>
-        <input type="range" id="controle-atenuador-de-linha" min="0" max="50" value="10">
+        <div id="canvas-wrapper">
+        </div>
       </div>
       
-      <div class="caixa direita">
-        <h3>Texto para distorcer</h3>
-        <input type="text" id="texto-para-distorcer" value="Escreva o que quiser distorcer">
-        <h3>Controles do deslocamento</h3>
-        <p>Força Deslocamento eixo x</p>
-        <input type="range" id="controle-deslocamento-x" min="-200" max="200" value="30">
-        <p>Força Deslocamento eixo y</p>
-        <input type="range" id="controle-deslocamento-y" min="-200" max="200" value="30">
-        <p></p>
-        <button id="botao-gerar-deslocamento">Gerar Deslocamento</button>
-        
+    <div class="caixa textura" id="textura">
+      
+      <button id="botao-desenhar-textura">Criar textura</button>
+
+      <h3>Força de desfoque</h3>
+
+      <div class="controles-range">
+      <input type="range" id="controle-desfoque-de-linha" min="5" max="89" value="10"></Input>
+      <span id="desfoque-de-linha">0</span>
+      
+      </div>
+
+      <h3>Controles do gerador de textura</h3>
+      <p>Número máximo de partes da linha</p>
+      
+      <div class="controles-range">        
+        <input type="range" id="controle-numero-maximo-de-partes" min="1" max="15" value="7"></Input>
+        <span id="numero-maximo-de-partes">0</span>
         
       </div>
+      
+      <p>Número mínimo de partes da linha</p>
+      
+      <div class="controles-range">        
+        <input type="range" id="controle-numero-minimo-de-partes" min="1" max="15" value="5"></Input>
+        <span id="numero-minimo-de-partes">0</span>
+        
+      </div>
+      
+      <p>Números de linhas</p>
+      
+      <div class="controles-range">        
+        <input type="range" id="controle-numero-de-linhas" min="1" max="50" value="5"></Input>
+        <span id="numero-de-linhas">0</span>
+        
+      </div>
+      
+      <p>Aleatoriedade da linha</p>
+      
+      <div class="controles-range">        
+        <input type="range" id="controle-aleatoriedade-da-linha" min="1" max="200" value="20"></Input>
+        <span id="aleatoriedade-da-linha">0</span>
+        
+      </div>
+      
+      <p>Chance de bifurcação</p>
+      
+      <div class="controles-range">        
+        <input type="range" id="controle-chance-bifurcacao" min="1" max="9" value="2"></Input>
+        <span id="chance-bifurcacao">0</span>
+  
+      </div>
+      
+      <p>Força de atenuação das linhas</p>
+      
+      <div class="controles-range">        
+        <input type="range" id="controle-atenuador-de-linha" min="0" max="50" value="10" ></Input>
+        <span id="atenuador-de-linha">0</span>
+        
+      </div>
+      
+      <p>Espessura das linhas</p>
+      
+      <div class="controles-range">        
+          <input type="range" id="controle-espessura-de-linha" min="1" max="37" value="10" ></Input>
+          <span id="espessura-de-linha">0</span>
+      </div>
+          
+    </div>
+      
+    <div class="caixa texto" id="texto">
+        <h3>Seção de textos</h3>
+        <p>Texto principal</p>
+        
+        <input type="text" id="texto-principal" value="texto principal">
+        
+        <p>Tamanho texto principal</p>
+      
+        <div class="controles-range">         
+          <input type="range" id="controle-tamanho-texto-principal" min="24" max="96" value="10"></Input>
+          <span id="tamanho-texto-principal">0</span>
+          
+        </div>
+        <p>Texto superior</p>
+    
+        <input type="text" id="texto-superior" value="">
+        <p>Texto direito</p>
+        
+        <input type="text" id="texto-direito" value="">
+        <p>Texto inferior</p>
+        
+        <input type="text" id="texto-inferior" value="">
+        <p>Texto esquerdo</p>
+    
+        <input type="text" id="texto-esquerdo" value="">
+        <h3>cores</h3>
+        <p>Cor de fundo</p>
+        
+        <input type="color" id="cor-fundo" value="#ffffff" />
+        
+        <p>Cor do texto</p>
+        
+        <input type="color" id="cor-texto"value="#ff0000" />
+        
+        <h3>Inserir Logo</h3>
+        
+        <select name="Inserir Logo" id="logos">
+          <option value="0">Sem Logo</option>
+          <option value="1">Logo Superior Horizontal</option>
+          <option value="2">Logo Superior Vertical</option>
+          <option value="3">Logo Inferior Horizontal</option>
+          <option value="4">Logo Inferior Vertical</option>
+        </select>  
+      </div>
+    
+    <div class = "caixa aplicacao"id="aplicacao">
+      <button id="botao-gerar-deslocamento">Gerar Deslocamento</button>
+      <h3>Força de Deslocamento</h3>
+      
+      <div class="controles-range">  
+        <input type="range" id="controle-range-deslocamento" min="-150" max="150" value="30" ></Input>
+        <span id="range-deslocamento">0</span>
+      </div>
+      <button id="sobrepor-textura">Sobrepor a textura</button>
+      <h3>Exportação</h3>
+      <button id="salvar-jpg">Salvar imagem como JPG</button>
+      <button id="salvar-png">Salvar imagem como PNG</button>
+    </div>
     </div>
     <script src="principal.js"></script>
     <script src="desenhoLinha.js"></script>
     <script src="deslocamento.js"></script>
   </body>
+<script type="text/javascript">
+  function rangeSlide(input) {
+    const spanId = input.id.replace("controle-", "");
+    const span = document.getElementById(spanId);
+    if (span) span.innerText = input.value;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("input[type='range']").forEach(input => {
+      rangeSlide(input); // Atualiza os valores ao carregar
+      input.addEventListener("input", () => rangeSlide(input)); // Atualiza ao mover o slider
+    });
+  });
+</script>
 </html>

@@ -1,13 +1,14 @@
 //*funcao principal que cria as linhas semi aleatorias
 
 /**
+ * @param {p5.graphics} buffer - p5 grapics para ser desenhado= [x,y]
  * @param {Array} arrayInicial - array do ponto inicial com a posição x e y = [x,y]
  * @param {Array} arrayFinal - array do ponto final com a posição x e y = [x,y]
  * @param {number} numeroDePartes - o número de partes da linha
  * @param {number} corDaLinha - a cor da linha entre 20 - 255
  */
 
-function desenhoLinha(arrayInicial, arrayFinal, numeroDePartes, corDaLinha = 20) {
+function desenhoLinha(buffer,arrayInicial, arrayFinal, numeroDePartes, corDaLinha = 20) {
   let listaPontos = [];
   let valorNoise = random(2000);
 
@@ -18,7 +19,7 @@ function desenhoLinha(arrayInicial, arrayFinal, numeroDePartes, corDaLinha = 20)
 
   //defino os pontos iniciais para desenhar as linhas
   //e calculo o passo da linha 
-  let ponto1 = pontoInicial; let ponto2 = pontoInicial;
+  let ponto1 = pontoInicial.copy(); let ponto2 = pontoInicial.copy();
   let passo = p5.Vector.div(vetorDirecao, numeroDePartes);
 
 
@@ -31,8 +32,8 @@ function desenhoLinha(arrayInicial, arrayFinal, numeroDePartes, corDaLinha = 20)
     //adiciono um vetor aleatorio no passo
     //assim ele não se movimenta aleatoriamente
     //mas muda levemente a direção do ponto
-    passo.add(random(-aleatoriedadeDaLinha, aleatoriedadeDaLinha),
-      random(-aleatoriedadeDaLinha, aleatoriedadeDaLinha));
+    passo.add(randomGaussian(0, aleatoriedadeDeLinha),
+    randomGaussian(0, aleatoriedadeDeLinha));
     ponto2.add(passo);
 
     //uso o ponto 2 para a lista e atualizo o ponto 1 como ponto 2
@@ -49,13 +50,15 @@ function desenhoLinha(arrayInicial, arrayFinal, numeroDePartes, corDaLinha = 20)
 
   //*pintar as linhas
   for (let j = 0; j < listaPontos.length - 1; j++) {
-    strokeWeight(1000 / listaPontos[j][4]);
-    stroke(listaPontos[j][4]);
+    buffer.strokeWeight((3000 / listaPontos[j][4])*(espessuraDeLinha/10));
+    buffer.stroke(listaPontos[j][4]);
 
-    line(listaPontos[j][0],
+    buffer.line(
+      listaPontos[j][0],
       listaPontos[j][1],
       listaPontos[j][2],
-      listaPontos[j][3]);
+      listaPontos[j][3]
+    );
   }
 
   //*aleatoriedorizor de bifurcação 
@@ -65,7 +68,7 @@ function desenhoLinha(arrayInicial, arrayFinal, numeroDePartes, corDaLinha = 20)
       let pontoBifurcacao = random(listaPontos);
 
       //faço uma recursão chamando a função com os valores do ponto
-      desenhoLinha([pontoBifurcacao[0],
+      desenhoLinha(buffer,[pontoBifurcacao[0],
       pontoBifurcacao[1]],
         [pontoBifurcacao[2],
         pontoBifurcacao[3]],

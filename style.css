@@ -1,30 +1,325 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("./assets/Manrope-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("./assets/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("./assets/Manrope-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Butler";
+  src: url("./assets/Butler_Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Butler";
+  src: url("./assets/Butler_Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background-color: rgb(246, 234, 237);
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-color: rgb(0, 0, 0);
+  font-family: 'Manrope';
+  color: #FFFFFF;
+  line-height: 15px;
 }
 
 canvas {
-  display: flex;
+  transform : scale(0.5);
+  display: block;
+  margin: 10px;
+  transform-origin: top left;
+  top: 0;
+  left: 0;
+  
+}
+h3{
+  font-size: 20px;
+  letter-spacing: 1px;
+  font-family: "Butler";
+  font-weight: 500;
+  
+  padding: 3px 10px;
+  color:#dedede;
+  text-shadow: 0px 0px 1px #FFFFFF;
+  width: 330px;
 }
 
+p {
+  font-size: small;
+  padding: 4px 30px;
+}
+
+button {
+  font-family:"Butler";
+  font-weight: 500;
+  margin: 10px 30px;
+  color: #FFFFFF !important;
+  font-size: 13px;
+  text-shadow: 0px 0px 1px #FFFFFF;
+  box-shadow: 0px 0px 3px #ffffff;
+  padding: 13px 17px;
+  border-radius: 10px;
+  border: 2px solid #FFFFFF;
+  background: #010203;
+}
+button:hover {
+  color: #000000 !important;
+  background: #FFFFFF;
+  font-weight: 300;
+}
+/*
+.canvas-wrapper {
+  width: 400px; 
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  }
+*/
 #caixa-do-canvas {
   display: flex; 
+  padding: 10px;
   justify-content: center;
   align-items: center;
+  
 }
 
 .container {
   display: flex;
-  gap: 10px;
+  position:relative;
+  top: -20px;
+  gap: 5px;
 }
+
 .caixa {
-  border: 5px;
-  background-color: rgb(203, 203, 248);
+  width:350px;
+  height: 900px;
+  background-color: rgb(21, 21, 21);
   outline-color: aquamarine;
   border: 10px;
   border-color: black;
   margin: 10px;
   padding: 10px;
+  position: relative;
+  left:-560px;
+  border-radius: 10px;
+}
+
+.cabecalho {
+  background-color: rgb(21, 21, 21);
+  margin: 15px;
+  margin-top: 20px;
+  width: 1260px;
+  border-color: rgb(21, 21, 21);
+  position:relative;
+  bottom: 5px;
+  border-radius: 10px;
+}
+
+img {
+  padding: 5px 30px 5px 50px;
+  position:relative;
+  top: 9px;
+}
+
+.itens-cabecalho {
+  margin: 10px;
+  margin-bottom: 10px;
+  padding: 7px 28px;
+  font-size: large;
+  position:relative;
+  bottom:10px;
+  font-family:"Manrope";
+  font-weight: 500;
+  color: #000000 !important;
+  text-shadow: 0px 0px 1px #000000;
+  box-shadow: 0px 0px 2px #ffffff;
+  border: 2px solid #000000;
+  background: #ffffff;
+}
+
+.itens-cabecalho:hover {
+  color: #ffffff !important;
+  background: #00000053;
+  font-weight: 500;
+  padding: 3px 28px;
+}
+.controles-range{
+  margin-left: 30px;
+
+}
+#logo-gerador{
+  margin: 0px 50px;
+}
+
+#logos{
+  margin-left: 30px;
+	font-size: 17px;
+	padding: 4px 17px;
+  margin-left: 30px;
+	outline: none;
+	background: #000000;
+	color: #FFFFFF;
+	border: 1px solid #FFFFFF;
+	border-radius: 10px;
+	box-shadow: 0px 00px 2px 0px #FFFFFF;
+}
+
+#logos:focus {
+	background: #FFFFFF;
+	border: 1px solid #000000;
+	border-radius: 10px;
+  color: #000000;
+}
+
+#rangeValue {
+  text-align: center;
+  font-size: 1em;
+  color: #999;
+  font-weight: 700;
+  
+}
+span{
+  position:relative;
+  font-family: "Manrope";
+  font-weight: 700;
+  font-size: 16px;
+  top: -9px;
+  left: 9px;
+  color:#e0e0e0
+}
+
+
+/* parte que eu ignoraria pq usei recursos da internet pra criar isso
+e ficou básicamente mil definições para cada navegador, o que é chato */
+input[type=range] {
+  height: 10px;
+  -webkit-appearance: none;
+  margin: 10px 0;
+  width: 200px;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #FFFFFF;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 4px solid #000000;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 2px #FFFFFF;
+  border: 3px solid #000000;
+  height: 16px;
+  width: 5px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -11px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #FFFFFF;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #FFFFFF;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 4px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 3px #FFFFFF;
+  border: 3px solid #000000;
+  height: 16px;
+  width: 5px;
+  border-radius: 4px;
+  background: #FFFFFF;
+  cursor: pointer;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #FFFFFF;
+  border: 5px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 1px #FFFFFF;
+}
+input[type=range]::-ms-fill-upper {
+  background: #FFFFFF;
+  border: 4px solid #000000;
+  border-radius: 70px;
+  box-shadow: 0px 0px 1px #FFFFFF;
+}
+input[type=range]::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 6px #FFFFFF;
+  border: 3px solid #000000;
+  height: 16px;
+  width: 10px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #FFFFFF;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #FFFFFF;
+}
+
+input{
+  margin-left: 30px;
+  background-color: #000000;
+  border-radius: 10px;
+  border: 1px solid #FFFFFF;
+}
+
+input[type=text]{
+	font-size: 17px;
+	padding: 4px 17px;
+  margin-left: 30px;
+	outline: none;
+	background: #000000;
+	color: #FFFFFF;
+	border: 1px solid #FFFFFF;
+	border-radius: 10px;
+	box-shadow: 0px 00px 2px 0px #FFFFFF;
+}
+
+input:focus {
+	background: #FFFFFF;
+	border: 1px solid #000000;
+	border-radius: 10px;
+  color: #000000;
 }
