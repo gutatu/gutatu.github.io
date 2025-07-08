@@ -476,9 +476,10 @@ function atualizarLogo () {
     y = 1100;
   }
   let logoPath = caminhoLogo(tipo, index, corLogo);
-
+  
   loadImage(logoPath, img => {
-    image(img,x, y, w,h);
+    imgTexto.image(img,x, y, w,h);
+    image(imgTexto,0,0);
   }, err => {
     print("erro ao carregar logo ", logoPath);
   })
