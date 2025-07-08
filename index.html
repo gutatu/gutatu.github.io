@@ -15,11 +15,11 @@
 
   <body>
     <div class="cabecalho">
-      <img src="SVG/Logo-gerador.svg" id="logo-gerador" height="30">
+      <img src="SVG/logo-gerador.svg" id="logo-gerador" height="30">
       <button id="botao-tela-textura" class="itens-cabecalho">Textura</button>
       <button id="botao-tela-texto" class="itens-cabecalho">Texto</button>
       <button id="botao-tela-aplicacao"class="itens-cabecalho" >Aplicação</button>
-      <img src="SVG/logo-devaneio-do-velhaco-horizontal-1.svg" height="40">
+      <img src="SVG/logo-devaneio-do-velhaco-horizontal-1-branco.svg" height="40">
     </div>
     <div class="container">
       <div id="caixa-do-canvas">
@@ -29,12 +29,12 @@
       
     <div class="caixa textura" id="textura">
       
-      <button id="botao-desenhar-textura">Criar textura</button>
+      <button id="botao-desenhar-textura" title="Gera uma nova opção para a textura">Criar textura</button>
 
       <h3>Força de desfoque</h3>
 
       <div class="controles-range">
-      <input type="range" id="controle-desfoque-de-linha" min="5" max="89" value="10"></Input>
+      <input type="range" id="controle-desfoque-de-linha" min="5" max="89" value="10" title="Altera o valor do desfoque"></Input>
       <span id="desfoque-de-linha">0</span>
       
       </div>
@@ -43,7 +43,7 @@
       <p>Número máximo de partes da linha</p>
       
       <div class="controles-range">        
-        <input type="range" id="controle-numero-maximo-de-partes" min="1" max="15" value="7"></Input>
+        <input type="range" id="controle-numero-maximo-de-partes" min="1" max="15" value="7" title="Controla o máximo de seções que as linhas vão ter"></Input>
         <span id="numero-maximo-de-partes">0</span>
         
       </div>
@@ -51,7 +51,7 @@
       <p>Número mínimo de partes da linha</p>
       
       <div class="controles-range">        
-        <input type="range" id="controle-numero-minimo-de-partes" min="1" max="15" value="5"></Input>
+        <input type="range" id="controle-numero-minimo-de-partes" min="1" max="15" value="5"title="Controla o minimo de seções que as linhas vão ter"></Input>
         <span id="numero-minimo-de-partes">0</span>
         
       </div>
@@ -59,7 +59,7 @@
       <p>Números de linhas</p>
       
       <div class="controles-range">        
-        <input type="range" id="controle-numero-de-linhas" min="1" max="50" value="5"></Input>
+        <input type="range" id="controle-numero-de-linhas" min="1" max="50" value="5" title="Controla o número de linhas desenhas, !Cuidado! valores altos podem dar problema com alta probabiliade de bifurcação"></Input>
         <span id="numero-de-linhas">0</span>
         
       </div>
@@ -67,7 +67,7 @@
       <p>Aleatoriedade da linha</p>
       
       <div class="controles-range">        
-        <input type="range" id="controle-aleatoriedade-da-linha" min="1" max="200" value="20"></Input>
+        <input type="range" id="controle-aleatoriedade-da-linha" min="1" max="200" value="20"title="Controla o desvio padrão da aleatoriedade das linhas"></Input>
         <span id="aleatoriedade-da-linha">0</span>
         
       </div>
@@ -75,7 +75,7 @@
       <p>Chance de bifurcação</p>
       
       <div class="controles-range">        
-        <input type="range" id="controle-chance-bifurcacao" min="1" max="9" value="2"></Input>
+        <input type="range" id="controle-chance-bifurcacao" min="1" max="9" value="2" title="Controla a chance de bifurcação, !Cuidado! valores altos podem dar problema"></Input>
         <span id="chance-bifurcacao">0</span>
   
       </div>
@@ -83,7 +83,7 @@
       <p>Força de atenuação das linhas</p>
       
       <div class="controles-range">        
-        <input type="range" id="controle-atenuador-de-linha" min="0" max="50" value="10" ></Input>
+        <input type="range" id="controle-atenuador-de-linha" title="Controla a velocidade em que as linhas atenuam" min="0" max="50" value="10" ></Input>
         <span id="atenuador-de-linha">0</span>
         
       </div>
@@ -91,7 +91,7 @@
       <p>Espessura das linhas</p>
       
       <div class="controles-range">        
-          <input type="range" id="controle-espessura-de-linha" min="1" max="37" value="10" ></Input>
+          <input type="range" id="controle-espessura-de-linha" min="1" max="37" value="10" title="Controla a espessura das linhas" ></Input>
           <span id="espessura-de-linha">0</span>
       </div>
           
@@ -101,12 +101,12 @@
         <h3>Seção de textos</h3>
         <p>Texto principal</p>
         
-        <input type="text" id="texto-principal" value="texto principal">
+        <input type="text" id="texto-principal" value="texto principal" title="Texto principal centralizado">
         
         <p>Tamanho texto principal</p>
       
         <div class="controles-range">         
-          <input type="range" id="controle-tamanho-texto-principal" min="24" max="96" value="10"></Input>
+          <input type="range" id="controle-tamanho-texto-principal" min="24" max="96" value="10" title="Controla o tamanho do texto principal"></Input>
           <span id="tamanho-texto-principal">0</span>
           
         </div>
@@ -133,7 +133,7 @@
         
         <h3>Inserir Logo</h3>
         
-        <select name="Inserir Logo" id="logos">
+        <select name="Inserir Logo" id="botao-logos" title="Escolha a posição e tipo do logo">
           <option value="0">Sem Logo</option>
           <option value="1">Logo Superior Horizontal</option>
           <option value="2">Logo Superior Vertical</option>
@@ -143,15 +143,16 @@
       </div>
     
     <div class = "caixa aplicacao"id="aplicacao">
-      <button id="botao-gerar-deslocamento">Gerar Deslocamento</button>
+      <button id="botao-gerar-deslocamento" title="Gera o deslocamento do texto pela textura salva">Gerar Deslocamento</button>
       <h3>Força de Deslocamento</h3>
       
       <div class="controles-range">  
-        <input type="range" id="controle-range-deslocamento" min="-150" max="150" value="30" ></Input>
+        <input type="range" id="controle-range-deslocamento" min="-150" max="150" value="30" title="Controla a força do deslocamento, podendo ser uma força interna ou externa"></Input>
         <span id="range-deslocamento">0</span>
       </div>
-      <button id="sobrepor-textura">Sobrepor a textura</button>
+      <button id="sobrepor-textura" title="Visualiza como a textura afeta os textos, não é exportada">Sobrepor a textura</button>
       <h3>Exportação</h3>
+
       <button id="salvar-jpg">Salvar imagem como JPG</button>
       <button id="salvar-png">Salvar imagem como PNG</button>
     </div>

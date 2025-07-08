@@ -25,13 +25,24 @@
 //*adicionar adicionar blur
 //*dicionar adicionar textos nas areas estranhas
 //*controlar cor do fundo e do texto
-//!controlar a distorçao para sair do centro
-//adicionar exportar como png ou jpeg
-//adicionar logo em svg do devaneio do velhaco
+//*controlar a distorçao para sair do centro
+//*adicionar exportar como png ou jpeg
+
+//*adicionar logo em svg do devaneio do velhaco
+//*fazer com que qualquer ajuste atualize a imagem
+//tooltips nas ferramentas
+//alinhar o texto na esquerda da barra e o número a direita
+//*botao sobrepor textura
+
+
+const LARGURA_LOGO_VERTICAL = 300;
+const LARGURA_LOGO_HORIZONTAL = 400;
 
 //buffers graficos
 let imgTexto; let imgBufferDesfocado;
 let imgTextura; let imgAplicacao;
+
+let bufferLogo; //tentei de todas as formas mas tive que apelar para uma variavel propria
 
 //forcas para deslocar
 let forcaDeslocamento = 30; 
@@ -57,6 +68,8 @@ let textoEsquerdo = "Devaneio";
 let corTexto;
 let corFundo;
 let tamanhoDaTela = [1080,1350];
+let logo;
+let logoImg; //inicio o contador em zero = nenhum logo
 
 //essa é onde vai ser mirado as linhas da textura
 let pontoCentral;
@@ -84,16 +97,19 @@ let botaoEspessuraDeLinha;
 let botaoDesfoque;
 
 let botaoTelaTextura; let botaoTelaTexto;
-let botaoTelaAplicação
+let botaoTelaAplicação ; let botaoSobreporTextura = false;
 
-
+let botaoSalvarJPG;
+let botaoSalvarPNG;
+let botaoLogo;
+let indiceLogoHorizontal;
+let indiceLogoVertical;
 
 function preload() {
   font = loadFont("assets/Butler_Bold.otf")
 }
 
 function setup() {
-  
   /*
   ――――――――――――――――――――――――――――――――――――――――――――――――――――
   ‖‖‖  ‖‖‖  ‖‖ seção configuração básica ‖‖  ‖‖‖   ‖‖‖
@@ -107,6 +123,9 @@ function setup() {
   textFont(font);
   mostrarCaixa("textura");
   
+  indiceLogoHorizontal = int(random(1,5));
+  indiceLogoVertical = int(random(1,7));
+
   /*
   ｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣｢｣
   ｢｣     seção criação de imagens     ｢｣
@@ -114,8 +133,9 @@ function setup() {
   */  
   
   //são as 3 imagens
-  imgAplicacao = createImage(width,height);
-  imgTexto = createImage(width,height);
+  imgAplicacao = createGraphics(width,height);
+  imgTexto = createGraphics(width,height);
+  bufferLogo = createGraphics(width,height);
   imgTextura = createGraphics(width,height); //textura inicial
   imgBufferDesfocado = createGraphics(width,height); //textura desfocada
 
@@ -151,7 +171,13 @@ function setup() {
   botaoGerarDeslocamento = select("#botao-gerar-deslocamento");
   
   botaoDesfoque =  select("#controle-desfoque-de-linha");
+  botaoSalvarJPG = select("#salvar-jpg");
+  botaoSalvarPNG = select("#salvar-png");
+  botaoSobreporTextura = select("#sobrepor-textura");
   
+
+  botaoLogo = select("#botao-logos");
+
   select("#botao-tela-textura").mousePressed(() => {
     mostrarCaixa("textura");
     image(imgBufferDesfocado,0,0);
@@ -159,6 +185,7 @@ function setup() {
   select("#botao-tela-texto").mousePressed(() => {
     mostrarCaixa("texto");
     escreverTexto();
+    atualizarLogo();
   });
   select("#botao-tela-aplicacao").mousePressed(() => mostrarCaixa("aplicacao"));
 }
@@ -170,7 +197,7 @@ function draw() {
   numeroMaximoDePartes = botaoNumeroMaximoDePartes.value();  numeroMinimoDePartes = botaoNumeroMinimoDePartes.value();
   numeroDeLinhas = botaoNumeroDeLinhas.value();  aleatoriedadeDeLinha = botaoAleatoriedadeDeLinha.value();
   chanceBifurcacao = botaoChanceBifurcacao.value();  atenuadorDeLinha = botaoAtenuadorDeLinha.value();
-  TamanhoTextoPrincipal = botaoTamanhoTextoPrincipal.value(); 
+  TamanhoTextoPrincipal = botaoTamanhoTextoPrincipal.value();
 
   corTexto = botaoCorTexto.value(); corFundo = botaoCorFundo.value();
 
@@ -183,15 +210,42 @@ function draw() {
   //tem que usar uma arrow function porque a função mousePressed espera um callback (chamar uma função)
   botaoCriarTextura.mousePressed(criadorDeTextura);
 
-  botaoGerarDeslocamento.mousePressed(distorcaoDoCanvas);
-
-  botaoNumeroMaximoDePartes.changed(() => numeroMaximoDePartes = botaoNumeroMaximoDePartes.value());
-  botaoNumeroMinimoDePartes.changed(() => numeroMinimoDePartes = botaoNumeroMinimoDePartes.value());
-  botaoNumeroDeLinhas.changed(() => numeroDeLinhas = botaoNumeroDeLinhas.value());
-  botaoAleatoriedadeDeLinha.changed(() => aleatoriedadeDeLinha = botaoAleatoriedadeDeLinha.value());
-  botaoChanceBifurcacao.changed(() => chanceBifurcacao = botaoChanceBifurcacao.value());
-  botaoAtenuadorDeLinha.changed(() => atenuadorDeLinha = botaoAtenuadorDeLinha.value());
- 
+  
+  botaoNumeroMaximoDePartes.changed(() => {
+    numeroMaximoDePartes = botaoNumeroMaximoDePartes.value();
+    criadorDeTextura();
+  });
+  
+  botaoNumeroMinimoDePartes.changed(() => {
+    numeroMinimoDePartes = botaoNumeroMinimoDePartes.value();
+    criadorDeTextura();
+  });
+  
+  botaoNumeroDeLinhas.changed(() => {
+    numeroDeLinhas = botaoNumeroDeLinhas.value()
+    criadorDeTextura();
+  });
+  
+  
+  botaoAleatoriedadeDeLinha.changed(() => {
+    aleatoriedadeDeLinha = botaoAleatoriedadeDeLinha.value()
+    criadorDeTextura();
+  });
+  
+  botaoChanceBifurcacao.changed(() => {
+    chanceBifurcacao = botaoChanceBifurcacao.value()
+    criadorDeTextura();
+  });
+  
+  botaoAtenuadorDeLinha.changed(() => {
+    atenuadorDeLinha = botaoAtenuadorDeLinha.value()
+    criadorDeTextura();
+  });
+  
+  botaoLogo.changed(() => {
+    logo = int(botaoLogo.value());
+    escreverTexto();
+  });
   botaoCorFundo.changed(()=> {
     corFundo = botaoCorFundo.value();
     escreverTexto();
@@ -205,34 +259,37 @@ function draw() {
     TamanhoTextoPrincipal = botaoTamanhoTextoPrincipal.value();
     escreverTexto();
   });
-
-  botaoEspessuraDeLinha.changed(() => espessuraDeLinha = botaoEspessuraDeLinha.value());
-
+  
+  botaoEspessuraDeLinha.changed(() => {
+    espessuraDeLinha = botaoEspessuraDeLinha.value();
+    criadorDeTextura();
+  });
+  
   botaoDesfoque.input(() => {
     nivelDeDesfoque = botaoDesfoque.value();
     aplicarDesfoque();
   });
   
   botaoForcaDeslocamento.changed(() => forcaDeslocamento = botaoForcaDeslocamento.value());
-
+  
   botaoTextoPrincipal.input(() => {
     //texto para distorcer é uma variavel global
     textoPrincipal = botaoTextoPrincipal.value();
     escreverTexto();
   });
-
+  
   botaoTextoSuperior.input(() => {
     //texto para distorcer é uma variavel global
     textoSuperior = botaoTextoSuperior.value();
     escreverTexto();
   });
-
+  
   botaoTextoDireito.input(() => {
     //texto para distorcer é uma variavel global
     textoDireito = botaoTextoDireito.value();
     escreverTexto();
   });
-
+  
   botaoTextoInferior.input(() => {
     //texto para distorcer é uma variavel global
     textoInferior = botaoTextoInferior.value();
@@ -244,6 +301,17 @@ function draw() {
     textoEsquerdo = botaoTextoEsquerdo.value();
     escreverTexto();
   });
+  botaoGerarDeslocamento.mousePressed(distorcaoDoCanvas);
+  botaoSobreporTextura.mousePressed(() => {
+    tint(255,23);
+    image(imgBufferDesfocado,0,0);
+    tint(255);
+  });
+
+  botaoSalvarJPG.mousePressed(() => save(imgAplicacao,`devaneio nmr ${int(random(9999999))}.jpg`));
+  botaoSalvarPNG.mousePressed(() => save(imgAplicacao,"devaneio nmr" + random(9999999)));
+
+
 
   //!olhando em retrospecto não precisava ter variaveis nomeadas para segurar os botões !ou talvez sim
   background(255);
@@ -263,17 +331,18 @@ function mostrarCaixa(caixaAtiva) {
 //escreve o texto 
 function escreverTexto(){
   background(corFundo);
+  atualizarLogo();
   fill(corTexto);
   noStroke();
   textAlign(CENTER,TOP);
   textSize(TamanhoTextoPrincipal);
   textStyle(BOLD);
   text(textoPrincipal, 80, 320, width-160);
-
   let tamanhoTextoMoldura =40
   textStyle(NORMAL);
   textAlign(CENTER,TOP);
   
+
   push();
   rotate(HALF_PI);
   textSize(50);
@@ -290,6 +359,8 @@ function escreverTexto(){
   text(textoInferior , -width+70, -height + tamanhoTextoMoldura -20, width-tamanhoTextoMoldura -30,tamanhoTextoMoldura);
   pop();
 
+
+  //coloco o canvas no buffer da imagem texto
   loadPixels();
   imgTexto.loadPixels();
   for (let p = 0; p < pixels.length; p ++ ) {
@@ -308,8 +379,6 @@ function aplicarDesfoque() {
 }
 
 function distorcaoDoCanvas() {
- 
-   
     
     deslocamento(tamanhoDaTela);
     tint(255,255);
@@ -351,4 +420,70 @@ function pontoAleatorioBorda() {
     case 3: return([0,random(height)]);
   }
 }
- 
+
+function brilhoDoFundo (hex) {
+  //aqui estou pegando o hex da cor do fundo e selecionando cada trecho da string
+  //e torno uma variavel, para dai calcular o valor médio do brilho
+  let r = parseInt(hex.slice(1, 3), 16);
+  let g = parseInt(hex.slice(3, 5), 16);
+  let b = parseInt(hex.slice(5, 7), 16);
+    // Calculate perceived brightness
+  return 0.299 * r + 0.587 * g + 0.114 * b;
+}
+
+function atualizarLogo () {
+  if (!logo || logo == 0) return;
+  indiceLogoHorizontal = int(random(1,5));
+  indiceLogoVertical = int(random(1,7));
+  let brilho = brilhoDoFundo(corFundo);
+  let corLogo = (brilho < 128) ? "preto":"branco";
+  let tipo, index, w, h, x, y;
+
+  if (logo === 1) {
+    //logo horizontal superior
+    tipo = "horizontal";
+    index = indiceLogoHorizontal;
+    w = LARGURA_LOGO_HORIZONTAL;
+    h = 100;
+    x = 350;
+    y = 100;
+  }
+  else if (logo === 2){
+    //logo vertical superior
+    tipo = "vertical";
+    index = indiceLogoVertical;
+    w = LARGURA_LOGO_VERTICAL;
+    h = 150;
+    x = 380;
+    y = 100;
+  }
+  else if (logo ===3 ){
+    //logo horizontal inferior
+    tipo = "horizontal";
+    index = indiceLogoHorizontal;
+    w = LARGURA_LOGO_HORIZONTAL;
+    h = 100;
+    x = 350;
+    y = 1100;
+  }
+  else {
+    //logo vertical inferior
+    tipo = "vertical";
+    index = indiceLogoVertical;
+    w = LARGURA_LOGO_VERTICAL;
+    h = 150;
+    x = 380;
+    y = 1100;
+  }
+  let logoPath = caminhoLogo(tipo, index, corLogo);
+
+  loadImage(logoPath, img => {
+    image(img,x, y, w,h);
+  }, err => {
+    print("erro ao carregar logo ", logoPath);
+  })
+}
+
+function caminhoLogo(tipo, index, cor) {
+  return `PNG/logo-devaneio-do-velhaco-${tipo}-${index}-${cor}.png`
+}

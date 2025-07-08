@@ -37,12 +37,13 @@ html, body {
   font-family: 'Manrope';
   color: #FFFFFF;
   line-height: 15px;
+  vertical-align: middle;
 }
 
 canvas {
   transform : scale(0.5);
   display: block;
-  margin: 10px;
+  margin-left: 300px;
   transform-origin: top left;
   top: 0;
   left: 0;
@@ -53,27 +54,51 @@ h3{
   letter-spacing: 1px;
   font-family: "Butler";
   font-weight: 500;
-  
-  padding: 3px 10px;
+  text-align: center;
+  padding: 10px;
   color:#dedede;
+  background-color: #444444;
+  border-radius: 10px;
   text-shadow: 0px 0px 1px #FFFFFF;
   width: 330px;
 }
 
 p {
   font-size: small;
-  padding: 4px 30px;
-}
+  text-align: center;
+  padding: 1px ;
+  border-width: 2px;
+  border: #e44040;
 
+  
+}
+.cabecalho {
+  background-color: rgb(21, 21, 21);
+  margin: 15px;
+  margin-left: 125px;
+  margin-top: 20px;
+  width: 1260px;
+  border-color: rgb(21, 21, 21);
+  position:relative;
+  bottom: 5px;
+  border-radius: 10px;
+  display:block;
+}
+#botao-desenhar-textura{
+  margin-left: 130px;
+}
 button {
   font-family:"Butler";
   font-weight: 500;
-  margin: 10px 30px;
-  color: #FFFFFF !important;
+  color: #FFFFFF ;
+  margin-top: 8px;
+  margin-bottom: 5px;
+  margin-left:30%;
+  margin-right:30%;
   font-size: 13px;
   text-shadow: 0px 0px 1px #FFFFFF;
   box-shadow: 0px 0px 3px #ffffff;
-  padding: 13px 17px;
+  padding: 13px 10px;
   border-radius: 10px;
   border: 2px solid #FFFFFF;
   background: #010203;
@@ -99,6 +124,16 @@ button:hover {
   
 }
 
+#botao-logos {
+  display: flex; 
+  margin-left: 90px;
+  background-color: #000000;
+  color:#d8d8d8;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  
+}
 .container {
   display: flex;
   position:relative;
@@ -120,16 +155,7 @@ button:hover {
   border-radius: 10px;
 }
 
-.cabecalho {
-  background-color: rgb(21, 21, 21);
-  margin: 15px;
-  margin-top: 20px;
-  width: 1260px;
-  border-color: rgb(21, 21, 21);
-  position:relative;
-  bottom: 5px;
-  border-radius: 10px;
-}
+
 
 img {
   padding: 5px 30px 5px 50px;
@@ -144,13 +170,13 @@ img {
   font-size: large;
   position:relative;
   bottom:10px;
-  font-family:"Manrope";
-  font-weight: 500;
-  color: #000000 !important;
-  text-shadow: 0px 0px 1px #000000;
-  box-shadow: 0px 0px 2px #ffffff;
+  font-family:"Butler";
+  font-weight: 300;
+  color: #d8d8d8 ;
+  text-shadow: 0px 0px 3px #4c4c4c;
+  box-shadow: 0px 0px 5px #ffffff;
   border: 2px solid #000000;
-  background: #ffffff;
+  background: #000000;
 }
 
 .itens-cabecalho:hover {
@@ -210,7 +236,7 @@ e ficou básicamente mil definições para cada navegador, o que é chato */
 input[type=range] {
   height: 10px;
   -webkit-appearance: none;
-  margin: 10px 0;
+  margin-left: 30px;
   width: 200px;
 }
 input[type=range]:focus {
@@ -299,7 +325,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 input{
-  margin-left: 30px;
+  margin-left: 140px;
   background-color: #000000;
   border-radius: 10px;
   border: 1px solid #FFFFFF;
@@ -308,7 +334,7 @@ input{
 input[type=text]{
 	font-size: 17px;
 	padding: 4px 17px;
-  margin-left: 30px;
+  margin-left: 52px;
 	outline: none;
 	background: #000000;
 	color: #FFFFFF;
